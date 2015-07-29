@@ -1,0 +1,104 @@
+// Copyright 2015 Maintainers of OarphKit
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+option optimize_for = SPEED; 
+option cc_generic_services = false;
+
+package ok_msg; // Put generated classes in namespace ok_msg
+option java_package = "org.oarphkit.msg.proto"; // Java package
+option java_outer_classname = "FLiSpec";
+
+import "ok_msg/DynamicProto.proto";
+import "ok_msg/SVMapData.proto";
+
+// ===========================================================================
+// FLI Core
+
+message EnvFunctorEntryData {
+  optional Func func = 1;
+  optional SVMapData attrs = 2;
+}
+
+extend ok_msg.SVMapEntryData {
+  optional EnvFunctorEntryData EnvFunctorEntryDataSVMapEntry_field = 150;
+}
+
+message Func {
+  optional string alias = 1;
+  
+  // (With alias): assign this Func to an env var of the given name
+  // (Without alias): this Func refers to an env var of the given name
+  optional string name = 3;
+  
+  optional DynamicProto fli_dyn_params = 2;
+  
+  // Reserve for FLi
+  extensions 100 to 1000;
+    
+  // Reserve for user data
+  // Known users:
+  // 1000-1500: FLiCV
+  extensions 1001 to 20000;
+}
+
+message EnvState {
+  required SVMapData vars = 1;
+}
+
+// ===========================================================================
+// FSL Core
+
+message CompositionInit {
+  repeated Func func = 1;
+  
+  extend Func {
+   optional CompositionInit composition = 100;
+  }
+}
+
+message WhileInit {
+  optional Func condition = 1;
+  optional Func body = 2;
+
+  extend Func {
+    optional WhileInit while_ = 101;
+  }
+}
+
+message StreamInit {
+  optional Func src = 1;
+  optional Func snk = 2;
+
+  extend Func {
+    optional StreamInit stream = 102;
+  }
+}
+
+message TopKSinkInit {
+  required uint64 k = 1;
+  
+  extend Func {
+    optional TopKSinkInit topk_sink = 103;
+  }
+}
+
+message RangeInit {
+  optional int64 start = 1;
+  optional int64 step = 2;
+  required int64 limit = 3;
+  
+  extend Func {
+    optional RangeInit range = 104;
+  }
+}

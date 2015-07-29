@@ -1,0 +1,52 @@
+// Copyright 2015 Maintainers of OarphKit
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+option optimize_for = SPEED; 
+option cc_generic_services = false;
+
+package ok_msg; // Put generated classes in namespace ok_msg
+option java_package = "org.oarphkit.msg.proto"; // Java package
+option java_outer_classname = "DynamicValueProtos";
+
+message DynamicProto {
+
+  // A single value
+  optional string vStr = 1;
+  optional bytes vBytes = 2;
+  optional sint64 vInt = 3;
+  optional uint64 vUInt = 4;
+  optional bool vBool = 5;
+  optional float vFloat = 6;
+  optional double vDouble = 7;
+  
+  // A list of values
+  repeated sint64 vsInt = 8 [packed=true];
+  repeated uint64 vsUInt = 9 [packed=true];
+  repeated sint32 vsInt32 = 10 [packed=true];
+  repeated uint32 vsUInt32 = 11 [packed=true];
+  repeated float vsFloat = 12 [packed=true];
+  repeated double vsDouble = 13 [packed=true];
+  repeated string vsStr = 14;
+
+  // Nota bene: we could use the protobuf oneof feature
+  // for the fields above (because we essentially want
+  // a union), but oneofs are only in >= v2.6 
+  
+  // A map of values
+  repeated string k = 15;
+  repeated DynamicProto v = 16;
+    // Use `values` exclusively to repr a list of DynamicProto (discouraged)
+    // Nota bene: we could use a map, but again this is a
+    // proto3 feature (still in alpha at time of writing)
+}

@@ -1,0 +1,49 @@
+// Copyright 2015 Maintainers of OarphKit
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+option optimize_for = SPEED; 
+option cc_generic_services = false;
+
+package ok_msg; // Put generated classes in namespace ok_msg
+option java_package = "org.oarphkit.msg.proto"; // Java package
+option java_outer_classname = "SVMDataProtos";
+
+import "ok_msg/DynamicProto.proto";
+
+message SVMapEntryData {
+  // Key (if data for an SVMap)
+  optional string key = 1;
+  
+  // Required: use this wrapper to (de)serialize
+  required string wrapper_typename = 2;
+  
+  // In case the type is only byte-serializable
+  optional bytes value_bytes = 3;
+  
+  // For values that can be serialized as DynamicProto 
+  optional DynamicProto dyndata = 4;
+  
+  
+  // Reserved for Oarphkit;
+  // 100-150 reserved for Oarphkit Test
+  // 150-200 reserved for Oarphkit FLi
+  extensions 100 to 1000;
+    
+  // Reserved for user data
+  extensions 1001 to 20000;
+}
+
+message SVMapData {
+  repeated SVMapEntryData entry = 1;
+}

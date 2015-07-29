@@ -1,0 +1,48 @@
+vars {
+  entry {
+    key: "stdin"
+    wrapper_typename: "EnvFunctorEntry"
+    [ok_msg.EnvFunctorEntryDataSVMapEntry_field] {
+      func {
+        alias: "fsl::stdin"
+      }
+    }
+  }
+  entry {
+    key: "snk"
+    wrapper_typename: "EnvFunctorEntry"
+    [ok_msg.EnvFunctorEntryDataSVMapEntry_field] {
+      func {
+        alias: "fsl::Composition"
+        [ok_msg.CompositionInit.composition] {
+          func {
+            alias: "fsl::oarph"
+          }
+          func {
+            alias: "fsl::stdout"
+          }
+        }
+      }
+    }
+  }
+  entry {
+    key: "repl"
+    wrapper_typename: "EnvFunctorEntry"
+    [ok_msg.EnvFunctorEntryDataSVMapEntry_field] {
+      func {
+        alias: "fsl::Stream"
+        [ok_msg.StreamInit.stream] {
+          src: { name: "stdin" }
+          snk: { name: "snk" }
+        }
+      }
+    }
+  }
+  entry {
+    key: "env.main"
+    wrapper_typename: "EnvMainAttr"
+    dyndata {
+      vStr: "repl"
+    }
+  }
+}

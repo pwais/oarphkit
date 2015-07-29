@@ -1,0 +1,18 @@
+vars {
+  entry {
+    key: "fsl.shell"
+    wrapper_typename: "EnvFunctorEntry"
+    [ok_msg.EnvFunctorEntryDataSVMapEntry_field] {
+      func {
+        alias: "fsl::shell"
+      }
+    }
+  }
+  entry {
+    key: "env.main"
+    wrapper_typename: "EnvMainAttr"
+    dyndata {
+      vStr: "fsl.shell"
+    }
+  }
+}
