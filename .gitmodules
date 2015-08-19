@@ -7,3 +7,6 @@
 [submodule "deps/capnproto"]
 	path = deps/capnproto
 	url = https://github.com/sandstorm-io/capnproto
+[submodule "deps/djinni"]
+	path = deps/djinni
+	url = https://github.com/dropbox/djinni

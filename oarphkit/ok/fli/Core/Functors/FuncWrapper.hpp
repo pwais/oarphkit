@@ -55,6 +55,12 @@ struct func_traits<Ret(Arg)> {
   using argument_type = Arg;
 };
 
+template <class Ret, class Arg>
+struct func_traits<std::function<Ret(Arg)>> {
+  using result_type = Ret;
+  using argument_type = Arg;
+};
+
 template <class Ret>
 struct func_traits<Ret(void)> {
   using result_type = Ret;
@@ -359,6 +365,5 @@ protected:
       return Regname; \
     } \
   };
-
 
 #endif /* OK_FLI_CORE_FUNCTORS_FUNCWRAPPER_HPP_ */
