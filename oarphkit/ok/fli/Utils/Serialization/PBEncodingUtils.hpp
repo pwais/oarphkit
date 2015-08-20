@@ -97,6 +97,8 @@ namespace ok { namespace fli {
     if (!env.HasEncoding<PBFuncAttr>()) {
       return true; // No errors
     }
+    OKASSERT_FATAL(m.HasAttr<PBFuncAttr>(), "Missing func attrs");
+      // Programming error; user should disable PB on env, else we expect it
 
     ok_msg::Func &spec = m.GetAttrRef<PBFuncAttr>();
     if (!OKASSERT_CHECK(
@@ -122,6 +124,9 @@ namespace ok { namespace fli {
     if (!env.HasEncoding<PBFuncAttr>()) {
       return true; // No errors
     }
+    OKASSERT_FATAL(m.HasAttr<PBFuncAttr>(), "Missing func attrs");
+      // Programming error; user should disable PB on env, else we expect it
+OKLOG("moof: " << m.ToString());
 
     ok_msg::Func &spec = m.GetAttrRef<PBFuncAttr>();
     bool no_errors = block_dyn(*spec.mutable_fli_dyn_params());

@@ -65,8 +65,7 @@ bool EnvFunctorEntryWrapper::CreateFunctor(
 
   // Create the functor
   {
-    auto &reg = env.GetRegistry();
-    f = reg.CreateFunctor(alias);
+    f = env.GetRegistry().CreateFunctor(alias);
     if (!OKASSERT_CHECK(f.get(), "Failed to create a " + alias)) {
       return false;
     }
