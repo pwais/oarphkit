@@ -71,7 +71,7 @@ bool Session::ExecFliSpec(ok_msg::EnvState &e_msg) {
   }
 
   // Run main if there is one
-  if (e.GetMain()) {
+  if (e.HasMain()) {
     TimePoint start_main;
     bool success = e.RunMain();
     OKLOG_ELAPSED(start_main, "env.main");

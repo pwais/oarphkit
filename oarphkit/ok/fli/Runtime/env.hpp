@@ -111,13 +111,14 @@ struct env final : IPBSerializable<ok_msg::EnvState> {
 
   // == Main ===================================
 
-  // Run the env.main functor, if it exists, and return true on success
+  // Run the env.main functor and return true on success
   bool RunMain();
 
   // Set the env.main functor to the given Functor and return true on success
   bool SetMain(FunctorBase::Ptr /* weak */ f);
   bool SetMain(const std::string &varname);
 
+  bool HasMain();
   void ClearMain();
 
   // Get the env.main functor, if it exists, of nullptr on error

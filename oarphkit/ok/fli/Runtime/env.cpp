@@ -88,7 +88,7 @@ void env::Union(env &&other) {
 FunctorBase::Ptr /* weak */ env::GetFunctor(const std::string &varname) {
   if (!OKASSERT_CHECK(
          vars.HasKey(varname),
-         "Warn: tried to fetch non-existant functor: " + varname)) {
+         "Warn: tried to fetch non-existent functor: " + varname)) {
     return NullTUPtr<FunctorBase>();
   }
 
@@ -269,6 +269,10 @@ bool env::SetMain(const std::string &varname) {
   }
   vars.SetKey<EnvMainAttr>("env.main", varname);
   return true;
+}
+
+bool env::HasMain() {
+  return vars.HasKey("env.main");
 }
 
 void env::ClearMain() {

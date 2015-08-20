@@ -278,6 +278,7 @@ TEST(OKFLiEnvTest, TestCreateFunctorErrorsInvalidAlias) {
 
 TEST(OKFLiEnvTest, TestNoMain) {
   env e;
+  EXPECT_FALSE(e.HasMain());
   EXPECT_FALSE(e.RunMain());
   EXPECT_FALSE(e.GetMain());
   EXPECT_FALSE(e.SetMain(NullTUPtr<FunctorBase>()));
@@ -291,10 +292,12 @@ TEST(OKFLiEnvTest, TestSetMainStr) {
   EXPECT_TRUE(e.SetMain(e.GetFunctor("fun")));
   EXPECT_TRUE(e.RunMain());
   EXPECT_TRUE(e.GetMain());
+  EXPECT_TRUE(e.HasMain());
 
   e.ClearMain();
   EXPECT_FALSE(e.RunMain());
   EXPECT_FALSE(e.GetMain());
+  EXPECT_FALSE(e.HasMain());
 }
 
 TEST(OKFLiEnvTest, TestSetMainPtr) {
