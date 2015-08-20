@@ -18,13 +18,17 @@
 
 #include <sstream>
 
+#include "ok/Stringify.hpp"
+
 namespace ok {
 
 std::string SVStruct::ToString() const {
   std::stringstream ss;
   ss << "\n--- --- SVStruct Begin --- ---\n\n";
   for (const auto &entry : entrymap_) {
-    ss << entry.first << " -> " << entry.second->ToString() << "\n\n";
+    ss << entry.first << " (" << Stringify(&entry.first) << ") -> " <<
+        entry.second->ToString()
+        << "\n\n";
   }
   ss << "--- --- SVStruct End --- ---\n\n";
   return ss.str();
