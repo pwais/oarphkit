@@ -357,8 +357,9 @@ std::string NonStringifiable(const T &val) { return kSVMapOpaque; }
     friend class ::ok::SVMap; \
     friend class ::ok::SVStruct; \
     friend class ::ok::detail::SVBase; \
-    static constexpr const char* Key() noexcept { \
-      return OK_XSTRINGIFY(KeyWrapper); \
+    static const char* Key() noexcept { \
+      static const char* key = OK_XSTRINGIFY(KeyWrapper); \
+      return key; \
     } \
     const char* ClassKey() noexcept override { \
       return KeyWrapper::Key(); \
