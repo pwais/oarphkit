@@ -106,9 +106,7 @@ bool While::FromEncoded(env &env, SVStruct &m) {
             SetCondition(env.CreateFunctor(FuncAttrsFromPB(*cond_spec)));
         if (!OKASSERT_CHECK(
               cond_success,
-              "Could not create or set condition func: " +
-                  PBFactory::AsTextFormatString(*cond_spec))) {
-
+              "Could not create or set condition func")) {
           return false;
         }
 
@@ -117,9 +115,7 @@ bool While::FromEncoded(env &env, SVStruct &m) {
             SetBody(env.CreateFunctor(FuncAttrsFromPB(*body_spec)));
         if (!OKASSERT_CHECK(
               body_success,
-              "Could not create or set body func: " +
-                  PBFactory::AsTextFormatString(*body_spec))) {
-
+              "Could not create or set body func")) {
           return false;
         }
 

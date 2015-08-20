@@ -77,8 +77,13 @@ message WhileInit {
 }
 
 message StreamInit {
-  optional Func src = 1;
+  optional Func src = 1; 
   optional Func snk = 2;
+  
+  repeated Func proc = 3;
+    // "Syntactic Sugar": create a Composition from these
+    // 'processors' and place them between the `src`
+    // and `snk`
 
   extend Func {
     optional StreamInit stream = 102;

@@ -17,6 +17,7 @@
 
 #include <sstream>
 
+#include "ok/fli/fsl/Composition.hpp"
 #include "ok/fli/Runtime/env.hpp"
 #include "ok/fli/Utils/Serialization/PBEncodingUtils.hpp"
 
@@ -116,20 +117,55 @@ bool Stream::FromEncoded(env &env, SVStruct &m) {
             SetSource(env.CreateFunctor(FuncAttrsFromPB(*src_spec)));
         if (!OKASSERT_CHECK(
               src_success,
-              "Could not create or set source func: " +
-                  PBFactory::AsTextFormatString(*src_spec))) {
-
+              "Could not create or set source func")) {
           return false;
         }
 
         auto *snk_spec = stream_spec->mutable_snk();
-        bool snk_success =
-            SetSink(env.CreateFunctor(FuncAttrsFromPB(*snk_spec)));
+        auto snk_f = env.CreateFunctor(FuncAttrsFromPB(*snk_spec));
         if (!OKASSERT_CHECK(
-              snk_success,
-              "Could not create or set sink func: " +
-                  PBFactory::AsTextFormatString(*snk_spec))) {
+              snk_f,
+              "Could not create sink func")) {
+          return false;
+        }
 
+        // Do we have stream `proc`essors ? If so, prepend them to the sink
+        FunctorBase::Ptr snk = NullTUPtr<FunctorBase>();
+        if (stream_spec->mutable_proc()->size()) {
+
+          // Compose all `proc`essors
+          auto proc_comp = Composition::CreateEmpty();
+
+          for (size_t i = 0; i < stream_spec->mutable_proc()->size(); ++i) {
+            auto &func_spec = *stream_spec->mutable_proc(i);
+            auto f = env.CreateFunctor(FuncAttrsFromPB(func_spec));
+            if (!OKASSERT_CHECK(
+                 f.get(),
+                 "Could not create a processor for proc " +
+                   std::to_string(i))) {
+              return false;
+            }
+
+            if (!OKASSERT_CHECK(
+                   proc_comp->Append(std::move(f)),
+                   "Cannot add proc " + f->ToString() + " to Stream")) {
+              return false;
+            }
+          }
+
+          if (!OKASSERT_CHECK(
+                 proc_comp->Append(std::move(snk_f)),
+                 "Sink incompatible with processors")) {
+            return false;
+          }
+
+          snk = std::move(proc_comp);
+        } else {
+          snk = std::move(snk_f);
+        }
+
+        bool snk_success = SetSink(std::move(snk));
+        if (!OKASSERT_CHECK(snk_success, "Could not set sink func")) {
           return false;
         }
 

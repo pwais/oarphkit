@@ -101,7 +101,6 @@ typename FunctorT::Ptr CheckFunctorEncoding(
 
   using namespace ok;
   using namespace ok::fli;
-  using namespace ok::fli::tptr;
 
   env default_env;
   if (!ep) {

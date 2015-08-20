@@ -588,6 +588,18 @@ class StreamInit : public ::google::protobuf::Message {
   inline ::ok_msg::Func* release_snk();
   inline void set_allocated_snk(::ok_msg::Func* snk);
 
+  // repeated .ok_msg.Func proc = 3;
+  inline int proc_size() const;
+  inline void clear_proc();
+  static const int kProcFieldNumber = 3;
+  inline const ::ok_msg::Func& proc(int index) const;
+  inline ::ok_msg::Func* mutable_proc(int index);
+  inline ::ok_msg::Func* add_proc();
+  inline const ::google::protobuf::RepeatedPtrField< ::ok_msg::Func >&
+      proc() const;
+  inline ::google::protobuf::RepeatedPtrField< ::ok_msg::Func >*
+      mutable_proc();
+
   static const int kStreamFieldNumber = 102;
   static ::google::protobuf::internal::ExtensionIdentifier< ::ok_msg::Func,
       ::google::protobuf::internal::MessageTypeTraits< ::ok_msg::StreamInit >, 11, false >
@@ -605,6 +617,7 @@ class StreamInit : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::ok_msg::Func* src_;
   ::ok_msg::Func* snk_;
+  ::google::protobuf::RepeatedPtrField< ::ok_msg::Func > proc_;
   friend void  protobuf_AddDesc_ok_5fmsg_2fFLiSpec_2eproto();
   friend void protobuf_AssignDesc_ok_5fmsg_2fFLiSpec_2eproto();
   friend void protobuf_ShutdownFile_ok_5fmsg_2fFLiSpec_2eproto();
@@ -1337,6 +1350,36 @@ inline void StreamInit::set_allocated_snk(::ok_msg::Func* snk) {
     clear_has_snk();
   }
   // @@protoc_insertion_point(field_set_allocated:ok_msg.StreamInit.snk)
+}
+
+// repeated .ok_msg.Func proc = 3;
+inline int StreamInit::proc_size() const {
+  return proc_.size();
+}
+inline void StreamInit::clear_proc() {
+  proc_.Clear();
+}
+inline const ::ok_msg::Func& StreamInit::proc(int index) const {
+  // @@protoc_insertion_point(field_get:ok_msg.StreamInit.proc)
+  return proc_.Get(index);
+}
+inline ::ok_msg::Func* StreamInit::mutable_proc(int index) {
+  // @@protoc_insertion_point(field_mutable:ok_msg.StreamInit.proc)
+  return proc_.Mutable(index);
+}
+inline ::ok_msg::Func* StreamInit::add_proc() {
+  // @@protoc_insertion_point(field_add:ok_msg.StreamInit.proc)
+  return proc_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::ok_msg::Func >&
+StreamInit::proc() const {
+  // @@protoc_insertion_point(field_list:ok_msg.StreamInit.proc)
+  return proc_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::ok_msg::Func >*
+StreamInit::mutable_proc() {
+  // @@protoc_insertion_point(field_mutable_list:ok_msg.StreamInit.proc)
+  return &proc_;
 }
 
 // -------------------------------------------------------------------

@@ -55,11 +55,11 @@ bool Composition::FromEncoded(env &env, SVStruct &m) {
             spec.MutableExtension(
                 ok_msg::CompositionInit::composition)->mutable_func();
         for (size_t i = 0; i < func_specs->size(); ++i) {
-          auto f = env.CreateFunctor(FuncAttrsFromPB(*func_specs->Mutable(i)));
+          auto &spec = *func_specs->Mutable(i);
+          auto f = env.CreateFunctor(FuncAttrsFromPB(spec));
           if (!OKASSERT_CHECK(
                  f.get(),
-                 "Could not create a functor for \n" +
-                 PBFactory::AsTextFormatString(func_specs->Get(i)))) {
+                 "Could not create a functor for spec " + std::to_string(i))) {
             return false;
           }
 

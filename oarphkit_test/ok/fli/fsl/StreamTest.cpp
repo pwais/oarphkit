@@ -18,6 +18,7 @@
 
 #include <list>
 
+#include "ok/fli/Core/Functors/FuncWrapper.hpp"
 #include "ok/fli/Core/Functors/Transform.hpp"
 #include "ok/fli/fsl/Stream.hpp"
 
@@ -52,6 +53,9 @@ public:
   ToTenSrc() : n(0) { }
   virtual ~ToTenSrc() { }
 };
+
+inline int AddOne(int x) { return x + 1; }
+OK_FLI_DECLARE_FW(AddOneXform, AddOne, "fli_test::AddOne");
 
 class ToListSnk : public Sink<int> {
 public:
@@ -116,8 +120,11 @@ TEST(OKFLiStreamTest, TestPBEncoding) {
   env e;
 
   e.AssignFunctor("src", ToTenSrc::Create());
+
   auto snk = ToListSnk::Create();
   e.AssignFunctor("snk", MakeUnOwned(snk.get()));
+    // We'll read from `snk` later, so don't let env own it
+
   static const std::string kStreamSpec =
       OK_STRINGIFY(
         alias: "fsl::Stream"
@@ -163,12 +170,17 @@ TEST(OKFLiStreamTest, TestPBFromFliSpec) {
             alias: "fli_test::ToListSnk"
             name: "snk"
           }
+          proc {
+            alias: "fli_test::AddOne"
+            name: "addone"
+          }
         }
       );
 
   env e;
   e.GetRegistryRef().Register<Stream>();
   e.GetRegistryRef().Register<ToTenSrc>();
+  e.GetRegistryRef().Register<AddOneXform>();
   e.GetRegistryRef().Register<ToListSnk>();
 
   auto s = CheckFunctorEncodingFromFliSpec<Stream>(kStreamSpec, e);
@@ -176,8 +188,66 @@ TEST(OKFLiStreamTest, TestPBFromFliSpec) {
     EXPECT_TRUE(e.IsFunctor("stream"));
     EXPECT_EQ(s.get(), e.GetFunctor("stream").get());
     EXPECT_TRUE(e.IsFunctor("src"));
+    EXPECT_TRUE(e.IsFunctor("addone"));
     EXPECT_TRUE(e.IsFunctor("snk"));
-    EXPECT_EQ(3, e.GetFunctorToName().size());
+    EXPECT_EQ(4, e.GetFunctorToName().size());
   }
 }
 
+TEST(OKFLiStreamTest, TestPBEncodingWithProc) {
+  /**
+   * Similar to TestPBEncoding, but exercises `proc` 'syntactic sugar'.
+   * We have to test this feature separately due to how
+   * `CheckFunctorEncoding()` and standard PB tests require
+   * an encoding spec serialize from and to the same text.
+   */
+
+  env e;
+
+  e.AssignFunctor("src", ToTenSrc::Create());
+  e.AssignFunctor("addone", MakeOwned(new AddOneXform()));
+
+  auto snk = ToListSnk::Create();
+  e.AssignFunctor("snk", MakeUnOwned(snk.get()));
+    // We'll read from `snk` later, so don't let env own it
+
+  static const std::string kStreamSpec =
+      OK_STRINGIFY(
+        alias: "fsl::Stream"
+        [ok_msg.StreamInit.stream] {
+          src {
+            name: "src"
+          }
+          snk {
+            name: "snk"
+          }
+          proc {
+            name: "addone"
+          }
+        }
+      );
+
+  auto s = Stream::CreateEmpty();
+  EXPECT_TRUE(s->SetSource(e.GetFunctor("src")));
+  EXPECT_TRUE(s->SetSink(e.GetFunctor("snk")));
+
+  #if OK_ENABLE_PROTOBUF
+
+  e.GetRegistryRef().Register<Stream>();
+  auto s_decoded = MakeOwned(new Stream());
+  auto spec_decoded = PBFactory::LoadFromString<ok_msg::Func>(kStreamSpec);
+  ASSERT_TRUE(s_decoded);
+  ASSERT_TRUE(spec_decoded);
+  auto func_attrs = FuncAttrsFromPB(*spec_decoded);
+  EXPECT_TRUE(s_decoded->FromEncoded(e, func_attrs));
+
+  EXPECT_NO_THROW(s_decoded->Call());
+  EXPECT_EQ(10, snk->ns.size());
+  int i = 0;
+  for (const auto &entry : snk->ns) {
+    EXPECT_EQ(i + 1, entry);
+    ++i;
+  }
+
+  #endif /* OK_ENABLE_PROTOBUF */
+}

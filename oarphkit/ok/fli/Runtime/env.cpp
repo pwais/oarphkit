@@ -150,27 +150,30 @@ FunctorBase::Ptr env::CreateFunctor(SVStruct &&func_attrs) {
   bool is_main = false;
 
   #if OK_ENABLE_PROTOBUF
-  if (func_attrs.HasAttr<PBFuncAttr>()) {
-    ok_msg::Func &func_spec = func_attrs.GetAttrRef<PBFuncAttr>();
-    if (func_spec.has_alias()) {
-      // We're going to create a Functor
-      if (func_spec.has_name()) {
-        varname = func_spec.name();
-        if (varname == "env.main") {
-          is_main = true;
-          varname = CreateDistinctAnonName("anon.func.");
-          OKLOG_DEBUG(
-            "Found functor requesting to be main, renaming to: " << varname);
-        } else if (IsEnvVar(varname)) {
-          OKLOG_ERROR(
-            "Functor making invalid request for env varname, skipping: \n" <<
-            PBFactory::AsTextFormatString(func_spec));
-          return NullTUPtr<FunctorBase>();
+  // Decide varname from pb spec
+  {
+    if (func_attrs.HasAttr<PBFuncAttr>()) {
+      ok_msg::Func &func_spec = func_attrs.GetAttrRef<PBFuncAttr>();
+      if (func_spec.has_alias()) {
+        // We're going to create a Functor
+        if (func_spec.has_name()) {
+          varname = func_spec.name();
+          if (varname == "env.main") {
+            is_main = true;
+            varname = CreateDistinctAnonName("anon.func.");
+            OKLOG_DEBUG(
+              "Found functor requesting to be main, renaming to: " << varname);
+          } else if (IsEnvVar(varname)) {
+            OKLOG_ERROR(
+              "Functor making invalid request for env varname, skipping: \n" <<
+              PBFactory::AsTextFormatString(func_spec));
+            return NullTUPtr<FunctorBase>();
+          }
         }
+      } else if (func_spec.has_name()) {
+        // The attrs indicates a reference to an existing Functor
+        return GetFunctor(func_spec.name());
       }
-    } else if (func_spec.has_name()) {
-      // The attrs indicates a reference to an existing Functor
-      return GetFunctor(func_spec.name());
     }
   }
   #endif

@@ -134,9 +134,10 @@ void protobuf_AssignDesc_ok_5fmsg_2fFLiSpec_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(WhileInit));
   StreamInit_descriptor_ = file->message_type(5);
-  static const int StreamInit_offsets_[2] = {
+  static const int StreamInit_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamInit, src_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamInit, snk_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamInit, proc_),
   };
   StreamInit_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -254,18 +255,19 @@ void protobuf_AddDesc_ok_5fmsg_2fFLiSpec_2eproto() {
     "g.CompositionInit\"y\n\tWhileInit\022\037\n\tcondit"
     "ion\030\001 \001(\0132\014.ok_msg.Func\022\032\n\004body\030\002 \001(\0132\014."
     "ok_msg.Func2/\n\006while_\022\014.ok_msg.Func\030e \001("
-    "\0132\021.ok_msg.WhileInit\"t\n\nStreamInit\022\031\n\003sr"
-    "c\030\001 \001(\0132\014.ok_msg.Func\022\031\n\003snk\030\002 \001(\0132\014.ok_"
-    "msg.Func20\n\006stream\022\014.ok_msg.Func\030f \001(\0132\022"
-    ".ok_msg.StreamInit\"P\n\014TopKSinkInit\022\t\n\001k\030"
-    "\001 \002(\00425\n\ttopk_sink\022\014.ok_msg.Func\030g \001(\0132\024"
-    ".ok_msg.TopKSinkInit\"g\n\tRangeInit\022\r\n\005sta"
-    "rt\030\001 \001(\003\022\014\n\004step\030\002 \001(\003\022\r\n\005limit\030\003 \002(\0032.\n"
-    "\005range\022\014.ok_msg.Func\030h \001(\0132\021.ok_msg.Rang"
-    "eInit:a\n#EnvFunctorEntryDataSVMapEntry_f"
-    "ield\022\026.ok_msg.SVMapEntryData\030\226\001 \001(\0132\033.ok"
-    "_msg.EnvFunctorEntryDataB&\n\026org.oarphkit"
-    ".msg.protoB\007FLiSpecH\001\200\001\000", 984);
+    "\0132\021.ok_msg.WhileInit\"\220\001\n\nStreamInit\022\031\n\003s"
+    "rc\030\001 \001(\0132\014.ok_msg.Func\022\031\n\003snk\030\002 \001(\0132\014.ok"
+    "_msg.Func\022\032\n\004proc\030\003 \003(\0132\014.ok_msg.Func20\n"
+    "\006stream\022\014.ok_msg.Func\030f \001(\0132\022.ok_msg.Str"
+    "eamInit\"P\n\014TopKSinkInit\022\t\n\001k\030\001 \002(\00425\n\tto"
+    "pk_sink\022\014.ok_msg.Func\030g \001(\0132\024.ok_msg.Top"
+    "KSinkInit\"g\n\tRangeInit\022\r\n\005start\030\001 \001(\003\022\014\n"
+    "\004step\030\002 \001(\003\022\r\n\005limit\030\003 \002(\0032.\n\005range\022\014.ok"
+    "_msg.Func\030h \001(\0132\021.ok_msg.RangeInit:a\n#En"
+    "vFunctorEntryDataSVMapEntry_field\022\026.ok_m"
+    "sg.SVMapEntryData\030\226\001 \001(\0132\033.ok_msg.EnvFun"
+    "ctorEntryDataB&\n\026org.oarphkit.msg.protoB"
+    "\007FLiSpecH\001\200\001\000", 1013);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ok_msg/FLiSpec.proto", &protobuf_RegisterTypes);
   EnvFunctorEntryData::default_instance_ = new EnvFunctorEntryData();
@@ -1720,6 +1722,7 @@ void WhileInit::Swap(WhileInit* other) {
 #ifndef _MSC_VER
 const int StreamInit::kSrcFieldNumber;
 const int StreamInit::kSnkFieldNumber;
+const int StreamInit::kProcFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -1795,6 +1798,7 @@ void StreamInit::Clear() {
       if (snk_ != NULL) snk_->::ok_msg::Func::Clear();
     }
   }
+  proc_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -1830,6 +1834,20 @@ bool StreamInit::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(26)) goto parse_proc;
+        break;
+      }
+
+      // repeated .ok_msg.Func proc = 3;
+      case 3: {
+        if (tag == 26) {
+         parse_proc:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_proc()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(26)) goto parse_proc;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1871,6 +1889,12 @@ void StreamInit::SerializeWithCachedSizes(
       2, this->snk(), output);
   }
 
+  // repeated .ok_msg.Func proc = 3;
+  for (int i = 0; i < this->proc_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, this->proc(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1893,6 +1917,13 @@ void StreamInit::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         2, this->snk(), target);
+  }
+
+  // repeated .ok_msg.Func proc = 3;
+  for (int i = 0; i < this->proc_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        3, this->proc(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1922,6 +1953,14 @@ int StreamInit::ByteSize() const {
     }
 
   }
+  // repeated .ok_msg.Func proc = 3;
+  total_size += 1 * this->proc_size();
+  for (int i = 0; i < this->proc_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->proc(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -1947,6 +1986,7 @@ void StreamInit::MergeFrom(const ::google::protobuf::Message& from) {
 
 void StreamInit::MergeFrom(const StreamInit& from) {
   GOOGLE_CHECK_NE(&from, this);
+  proc_.MergeFrom(from.proc_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_src()) {
       mutable_src()->::ok_msg::Func::MergeFrom(from.src());
@@ -1978,6 +2018,7 @@ bool StreamInit::IsInitialized() const {
   if (has_snk()) {
     if (!this->snk().IsInitialized()) return false;
   }
+  if (!::google::protobuf::internal::AllAreInitialized(this->proc())) return false;
   return true;
 }
 
@@ -1985,6 +2026,7 @@ void StreamInit::Swap(StreamInit* other) {
   if (other != this) {
     std::swap(src_, other->src_);
     std::swap(snk_, other->snk_);
+    proc_.Swap(&other->proc_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
