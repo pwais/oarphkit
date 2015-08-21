@@ -78,6 +78,7 @@ public:
 
   template <typename EntryT>
   typename EntryT::WrappedType &GetAttrRef() {
+OKLOG("key add: " << Stringify((void *) EntryT::Key()));
     return
       reinterpret_cast<EntryT *>(
         entrymap_.at(EntryT::Key()).get())->GetValueRef();
