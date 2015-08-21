@@ -345,9 +345,9 @@ std::string NonStringifiable(const T &val) { return kSVMapOpaque; }
     inline KeyWrapper() { } \
     virtual ~KeyWrapper() { } \
     typedef ValueT WrappedType; \
-    KeyWrapper(KeyWrapper &&k) = default; \
-    KeyWrapper &operator=(KeyWrapper &&) = default; \
-    static std::string EntryTypename() noexcept { \
+    inline KeyWrapper(KeyWrapper &&k) = default; \
+    inline KeyWrapper &operator=(KeyWrapper &&) = default; \
+    inline static std::string EntryTypename() noexcept { \
       return std::string(KeyWrapper::Key()); \
     } \
   protected: \
@@ -357,13 +357,12 @@ std::string NonStringifiable(const T &val) { return kSVMapOpaque; }
     friend class ::ok::SVMap; \
     friend class ::ok::SVStruct; \
     friend class ::ok::detail::SVBase; \
-    static const char* Key() noexcept { \
-      /* NB: We must statically declare  */ \
-      /*static const char* key = OK_XSTRINGIFY(KeyWrapper); */ \
-      /*return key; */ \
-      return OK_XSTRINGIFY(KeyWrapper); \
+    inline static const char* Key() noexcept { \
+      /* NB: We must statically declare a var to prevent inlined constants */ \
+      static const char* key = OK_XSTRINGIFY(KeyWrapper); \
+      return key; \
     } \
-    const char* ClassKey() noexcept override { \
+    inline const char* ClassKey() noexcept override { \
       return KeyWrapper::Key(); \
     } \
     inline std::string ToString() const override { \
@@ -372,13 +371,14 @@ std::string NonStringifiable(const T &val) { return kSVMapOpaque; }
     \
     /* =================================================================== */ \
     /* Fulfill the SVMap-friendly wrapper interface                       */ \
-    explicit KeyWrapper(std::unique_ptr<WrappedType> &&valptr) : \
+    inline explicit KeyWrapper(std::unique_ptr<WrappedType> &&valptr) : \
       valp_(std::move(valptr)) { } \
-    static ::ok::detail::SVEntryWrapperBase::UPtr WrapPtr( \
+    inline static ::ok::detail::SVEntryWrapperBase::UPtr WrapPtr( \
                             std::unique_ptr<WrappedType> &&valptr) { \
       return ::ok::detail::SVEntryWrapperBase::UPtr( \
                             new KeyWrapper(std::move(valptr))); \
     } \
+    inline \
     static ::ok::detail::SVEntryWrapperBase::UPtr Wrap(WrappedType &&v) { \
       return WrapPtr( \
           std::unique_ptr<WrappedType>(new WrappedType(std::move(v)))); \
