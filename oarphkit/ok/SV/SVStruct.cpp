@@ -26,7 +26,7 @@ std::string SVStruct::ToString() const {
   std::stringstream ss;
   ss << "\n--- --- SVStruct Begin --- ---\n\n";
   for (const auto &entry : entrymap_) {
-    ss << entry.first << " (" << Stringify(&entry.second->Key()) << ") -> " <<
+    ss << entry.first << " (" << Stringify((void *)entry.second->Key()) << ") -> " <<
         entry.second->ToString()
         << "\n\n";
   }
