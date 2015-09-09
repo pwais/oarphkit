@@ -28,7 +28,7 @@ std::string OarphSay(const std::string &in) {
 
 
   ss << "                < " << in << (in.empty() ? " " : "!");
-  ss <<                       " oarph oparh!>\n";
+  ss <<                       " oarph oarph!>\n";
 
   ss << "                 ";
   for (size_t i = 0; i < in.size(); ++i) { ss << "-"; }
