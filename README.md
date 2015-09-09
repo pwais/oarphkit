@@ -49,5 +49,16 @@ Note that Oarphkit uses cmake globs to identify compilable source files.  If
 you add a file, you must `$ touch CMakeLists.txt` and re-generate your 
 Makefiles (e.g. via `$ ./bootstrap.py --build`).
 
+### Profiling
+
+For Mac OS X, we recommend using valgrind with qcachegrind.  Use `--dsymutil=yes`
+to ensure callgrind output includes useful debug symbol information.
+
+```
+$ sudo port install valgrind qcachegrind graphviz
+$ ./bootstrap --build
+$ valgrind --dsymutil=yes --tool=callgrind build/oarphkit_test
+$ open qcachegrind  # Open the build/callgrind.out.$pid file generated
+```
 
 [license-url]: LICENSE

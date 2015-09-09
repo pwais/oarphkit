@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:trusty-20150320
+FROM ubuntu:utopic-20150625
 
 RUN apt-get update
 RUN apt-get -y install git build-essential clang llvm lldb-3.4 ccache vim curl wget time cmake dh-autoreconf libc++abi-dev libc++-dev
@@ -25,4 +25,5 @@ RUN apt-get update
 RUN apt-get -y upgrade cmake
 
 # For djinni
-RUN apt-get install -y openjdk-7-jdk ant
+RUN apt-get install -y openjdk-8-jdk ant
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
