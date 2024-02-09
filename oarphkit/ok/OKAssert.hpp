@@ -252,7 +252,7 @@ const ExprT &CheckIfImpl(const ExprT &boolable, const MessageThunkT &mf) {
 #else /* OK_OKASSERT_ENABLED is false */
 
 #define OKASSERT_FATAL(exp, msg) do { } while(0)
-#define OKASSERT_CHECK(expect_true_cond, msg) (cond)
+#define OKASSERT_CHECK(expect_true_cond, msg) do { } while(0)
 #define OKASSERT_FATAL_DIE(failmsg) do { } while(0)
 #define OKASSERT_CHECK_LOG(failmsg) do { } while(0)
 
