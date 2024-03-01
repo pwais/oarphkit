@@ -167,7 +167,7 @@ struct TimePoint {
   }
 
   static double GetDurationSeconds(const TimePoint &start, const TimePoint &end) {
-    return 1e-6 * GetDurationMicros(start, end);
+    return double(1e-6) * GetDurationMicros(start, end);
   }
 };
 
