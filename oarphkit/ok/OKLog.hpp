@@ -162,8 +162,8 @@ struct TimePoint {
 
   static uint64_t GetDurationMicros(const TimePoint &start, const TimePoint &end) {
     return
-      (end.time_point.tv_sec * 1000000 + end.time_point.tv_usec) - \
-      (start.time_point.tv_sec * 1000000 + start.time_point.tv_usec); \
+      (end.time_point.tv_sec * 1000000 + end.time_point.tv_usec) -
+      (start.time_point.tv_sec * 1000000 + start.time_point.tv_usec);
   }
 
   static double GetDurationSeconds(const TimePoint &start, const TimePoint &end) {
