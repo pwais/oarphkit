@@ -159,6 +159,16 @@ struct TimePoint {
   TimePoint() {
     gettimeofday(&time_point, nullptr);
   }
+
+  static uint64_t GetDurationMicros(const TimePoint &start, const TimePoint &end) {
+    return
+      (end.time_point.tv_sec * 1000000 + end.time_point.tv_usec) - \
+      (start.time_point.tv_sec * 1000000 + start.time_point.tv_usec); \
+  }
+
+  static double GetDurationSeconds(const TimePoint &start, const TimePoint &end) {
+    return 1e-6 * GetDurationMicros(start, end);
+  }
 };
 
 } /* namespace ok */
@@ -171,9 +181,7 @@ struct TimePoint {
 
 #define OKLOG_ELAPSED(start, msg) do { \
   ::ok::TimePoint end; \
-  const uint64_t elapsed_usec = \
-    (end.time_point.tv_sec * 1000000 + end.time_point.tv_usec) - \
-    (start.time_point.tv_sec * 1000000 + start.time_point.tv_usec); \
+  const uint64_t elapsed_usec = ::ok::TimePoint::GetDurationMicros(start, end); \
   OKLOG(msg << " " << OK_OKLOG_TIME_MESSAGE(elapsed_usec)); \
 } while (0)
 
