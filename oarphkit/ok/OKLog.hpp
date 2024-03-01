@@ -187,7 +187,13 @@ struct TimePoint {
 
 #else
 
-namespace ok { struct TimePoint { TimePoint() { } }; }
+namespace ok { 
+  struct TimePoint { 
+    TimePoint() { }   
+    static uint64_t GetDurationMicros(const TimePoint &start, const TimePoint &end) { return 0;}
+    static double GetDurationSeconds(const TimePoint &start, const TimePoint &end) { return 0; }
+  }; 
+}
 #define OKLOG_ELAPSED(start, msg) do { } while (0)
 
 #endif
@@ -204,7 +210,13 @@ namespace ok { struct TimePoint { TimePoint() { } }; }
 #define OKLOG_ERROR(msg) do { } while (0)
 #define OKLOG_NOFILE(msg) do { } while (0)
 
-namespace ok { struct TimePoint { TimePoint() { } }; }
+namespace ok { 
+  struct TimePoint { 
+    TimePoint() { }   
+    static uint64_t GetDurationMicros(const TimePoint &start, const TimePoint &end) { return 0;}
+    static double GetDurationSeconds(const TimePoint &start, const TimePoint &end) { return 0; }
+  }; 
+}
 #define OKLOG_ELAPSED(start, msg) do { } while (0)
 
 
